@@ -1,0 +1,37 @@
+FROM jupyterhub/jupyterhub
+
+###
+# This is JupyterHub with Jupyter Notebook installed for testing a PR to
+# Tensorboard to support proxying the web app through jupyter-server-proxy
+# for users in environments that have limited/restricted ability to open ports.
+#
+# This is not an example of how to run JupyterHub correctly.
+###
+
+# Tensorflow will install the real Tensorboard as a dependency.
+# We need to install TF before our TB because it won't recognize ours since the
+# name changed. So we install TF first, remove TB, then install our TB.
+RUN python3 -m pip install tensorflow==2.2.0 \
+ && python3 -m pip uninstall -y tensorboard \
+ && python3 \
+      -m pip \
+      install \
+      --index-url https://test.pypi.org/simple/ \
+      --extra-index-url https://pypi.org/simple \
+      tensorboardtmp==2.2.1
+
+# Install dependencies for JupyterHub to work:
+RUN python3 -m pip install \
+      notebook \
+      jupyterhub-dummyauthenticator \
+      jupyter-server-proxy
+
+# Create a user for testing:
+RUN useradd \
+      testuser \
+      --create-home \
+      --shell /bin/bash \
+      --uid 1001 \
+      --user-group
+
+COPY jupyterhub_config.py /srv/jupyterhub/

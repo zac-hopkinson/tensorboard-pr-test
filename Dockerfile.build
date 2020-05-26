@@ -1,0 +1,47 @@
+FROM ubuntu:18.04
+
+###
+# This is a local way to build the Tensorboard wheel with changes.
+# Follow instructions in README.md afterwards to upload to Test PyPi.
+# The original project's CI script is cloned in Travis:
+#   https://travis-ci.com/github/zac-hopkinson/tensorboard
+###
+
+# This is the commit with my changes:
+ARG CHERRY_PICK_COMMIT="60393f855337e2939483301684267d1655004918"
+# This is the version to apply these changes to:
+ARG TB_VER="2.2.1"
+# Both can be overridden with `docker build --build-arg <...>`
+
+# Install git and Bazel
+#   https://docs.bazel.build/versions/master/install-ubuntu.html
+RUN apt-get update \
+ && apt-get install -y \
+      curl \
+      git \
+      gnupg \
+      python3 \
+      python3-pip \
+      vim \
+      zip \
+# https://github.com/tensorflow/tensorflow/issues/15618
+ && ln -s /usr/bin/python3 /usr/bin/python \
+ && curl https://bazel.build/bazel-release.pub.gpg \
+    | apt-key add - \
+ && echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" \
+    | tee /etc/apt/sources.list.d/bazel.list \
+ && apt-get update \
+ && apt-get -y install bazel
+
+# Build TensorBoard with code changes
+WORKDIR /tmp
+RUN git clone https://github.com/zac-hopkinson/tensorboard \
+ && cd tensorboard \
+ && git checkout $TB_VER \
+ && git config --global user.name "hi" \
+ && git config --global user.email "hi@hi.com" \
+ && git cherry-pick $CHERRY_PICK_COMMIT \
+ && python -m pip install \
+      -r tensorboard/pip_package/requirements.txt \
+      -r tensorboard/pip_package/requirements_dev.txt \
+ && bazel build //tensorboard/pip_package

@@ -1,0 +1,16 @@
+FROM jupyter/base-notebook:lab-2.1.1
+
+ENV TENSORBOARD_PROXY_URL="/proxy/%PORT%/"
+
+# Tensorflow will install the real TensorBoard as a dependency.
+# We need to install TF before our TB because it won't recognize ours since the
+# name changed. So we install TF first, remove TB, then install our TB.
+RUN python3 -m pip install jupyter-server-proxy==1.5.0 \
+ && python3 -m pip install tensorflow==2.2.0 \
+ && python3 -m pip uninstall -y tensorboard \
+ && python3 \
+      -m pip \
+      install \
+      --index-url https://test.pypi.org/simple/ \
+      --extra-index-url https://pypi.org/simple \
+      tensorboardtmp==2.2.1
