@@ -83,7 +83,7 @@ zip -r tensorboardtmp-2.2.1-py3-none-any.whl tensorboard tensorboardtmp-2.2.1.di
 python3 -m twine upload --repository testpypi tensorboardtmp-2.2.1-py3-none-any.whl
 ```
 
-Now it can be installed from somewhere else for testing:
+Now it can be installed from TestPyPi else for testing:
 
 ```bash
 python \
@@ -291,6 +291,3 @@ You should see TensorBoard being proxied through jupyter-server-proxy.
 
   * Add documentation to TensorBoard
   * Related: https://github.com/tensorflow/tensorboard/pull/3142
-  * Screenshots:
-    * JupyterLab
-    * JupyterHub
