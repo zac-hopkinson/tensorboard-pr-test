@@ -1,6 +1,6 @@
 # TensorBoard jupyter-server-proxy Test
 
-I've submitted a pull request to the TensorBoard project to enable integration
+I've submitted [this pull request](https://github.com/tensorflow/tensorboard/pull/3674) to the TensorBoard project to enable integration
 with [jupyter-server-proxy](https://github.com/jupyterhub/jupyter-server-proxy).
 
 This is important for users who are in restrictive network environments without
