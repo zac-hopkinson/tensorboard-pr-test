@@ -83,7 +83,7 @@ zip -r tensorboardtmp-2.2.1-py3-none-any.whl tensorboard tensorboardtmp-2.2.1.di
 python3 -m twine upload --repository testpypi tensorboardtmp-2.2.1-py3-none-any.whl
 ```
 
-Now it can be installed from TestPyPi else for testing:
+Now it can be installed from TestPyPi for testing:
 
 ```bash
 python \
