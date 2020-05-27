@@ -134,7 +134,7 @@ using the proxy url.
 We can extend the official Jupyter Docker image to test these changes. This is a
 great simple way to test inside of an isolated environment. By running it inside
 of Docker we can also expose only the Jupyter port, so if we are able to view
-TensorBoard we know it's working through the proxy. A simple example is in
+TensorBoard we know it's going through the proxy. A simple example is in
 [Dockerfile.lab](Dockerfile.lab). Build it by running:
 
 ```bash
@@ -264,20 +264,8 @@ Open http://localhost:8000/ and login with username `testuser` and any password.
 Wait for your notebook to spawn. Open a terminal and install TensorFlow and
 our testing copy of TensorBoard:
 
-```bash
-python3 -m pip install --user tensorflow==2.2.0
-python3 -m pip uninstall -y tensorboard
-python3 \
-  -m pip \
-  install \
-  --user \
-  --index-url https://test.pypi.org/simple/ \
-  --extra-index-url https://pypi.org/simple \
-  tensorboardtmp==2.2.1
-```
-
-Close the terminal browser window. Create a new notebook. Copy and run the
-MNIST exmaple from above. Then use the IPython magic to launch TensorBoard:
+Create a new notebook. Copy and run the MNIST exmaple from above. Then use the
+IPython magic to launch TensorBoard:
 
 ```
 %load_ext tensorboard
@@ -289,5 +277,10 @@ You should see TensorBoard being proxied through jupyter-server-proxy.
 
 ### TODO
 
-  * Add documentation to TensorBoard
+  * Add documentation to TensorBoard (not sure where is appropriate)
   * Related: https://github.com/tensorflow/tensorboard/pull/3142
+    - Main difference is our version will work in more than just JupyterHub.
+    - Other difference is that that PR forces all JupyterHub users to always use
+      jupyter-server-proxy by default, while this PR is more of an opt-in
+      solution, or one that the admin would setup for users beforehand.
+      (Running JupyterHub generally implies there's an admin person or team.)
